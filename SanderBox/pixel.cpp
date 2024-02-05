@@ -2,8 +2,26 @@
 
 Pixel::Pixel(int type)
 {
-    //----------------Model stuff-----------------\\
+    //----------------Types-----------------\\
 
+    const char* Picture;
+
+    switch (type)
+    {
+    case 1:
+        Picture = "resources/textures/PixelText.png";
+        break;
+    case 2:
+        Picture = "resources/textures/Logo.png";
+        break;
+    default:
+        Picture = "resources/textures/PixelText.png";
+        break;
+    }
+
+
+
+    //----------------Model stuff-----------------\\
 
     float vertices[] = {
         // positions          // colors           // texture coords
@@ -45,6 +63,7 @@ Pixel::Pixel(int type)
     glEnableVertexAttribArray(2);
 
 
+
     //----------------Texture stuff-----------------\\
 
     // generate textures
@@ -61,7 +80,7 @@ Pixel::Pixel(int type)
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
  
-    unsigned char* data = stbi_load("resources/textures/PixelText.png", &width, &height, &nrChannels, 0);
+    unsigned char* data = stbi_load(Picture, &width, &height, &nrChannels, 0);
     if (data)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
@@ -86,7 +105,6 @@ void Pixel::draw(Shader shader, Camera camera)
     //If not makes pixel spin
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = glm::mat4(1.0f);
-    glm::mat4 projection = glm::mat4(1.0f);
 
     model = glm::translate(model, translation);
     //model = glm::mat4_cast(rotation);

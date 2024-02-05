@@ -30,9 +30,6 @@ Game::Game(const char* WindowTitle, int WindowWidth, int WindowHeight)
 Game::~Game()
 {
 
-	
-
-	glfwDestroyWindow(window);
 }
 
 void Game::display()
@@ -48,7 +45,7 @@ void Game::display()
 
 void Game::cleanup()
 {
-
+	glfwDestroyWindow(window);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
