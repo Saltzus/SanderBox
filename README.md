@@ -14,3 +14,10 @@ Welcome to SanderBox, a simple sandbox game where you can unleash your creativit
 ## Release
 You can download the latest version from 
 - [releases](https://github.com/Saltzus/SanderBox/releases)
+
+## Todo
+> Version 0.2
+- [ ] more types
+- [ ] revisioned gui
+- [ ] settings
+- [ ] saving system
