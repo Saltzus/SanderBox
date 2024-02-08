@@ -15,6 +15,13 @@ Welcome to SanderBox, a simple sandbox game where you can unleash your creativit
 You can download the latest version from 
 - [releases](https://github.com/Saltzus/SanderBox/releases)
 
+## Libraries
+- [glfw](https://www.glfw.org/)
+- [Opengl](https://www.opengl.org/)
+- [glad](https://github.com/Dav1dde/glad?tab=readme-ov-file)
+- [glm](https://github.com/g-truc/glm)
+- [ImGui](https://github.com/ocornut/imgui)
+
 ## Todo
 > Version 0.2
 - [ ] more types
