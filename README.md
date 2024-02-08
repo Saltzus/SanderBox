@@ -12,4 +12,5 @@ Welcome to SanderBox, a simple sandbox game where you can unleash your creativit
 ![SanderBox 3D View](https://github.com/Saltzus/SanderBox/assets/99826354/92adae60-44dd-44e1-b5af-ea947b5bb4f1)
 
 ## Release
-You can download the latest version from releases
+You can download the latest version from 
+- [releases](https://github.com/Saltzus/SanderBox/releases)
