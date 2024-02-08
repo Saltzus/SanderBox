@@ -6,8 +6,8 @@ Welcome to SanderBox, a simple sandbox game where you can unleash your creativit
 
 ## Features
 
-- Place and destroy blocks on a 52x47 grid.
-- Switch between edit view and 3D view by pressing the "M" key.
+- Place and destroy blocks on a `52x47` grid.
+- Switch between edit view and 3D view by pressing the `"M"` key.
 
 ![SanderBox 3D View](https://github.com/Saltzus/SanderBox/assets/99826354/92adae60-44dd-44e1-b5af-ea947b5bb4f1)
 
