@@ -11,6 +11,7 @@
 
 #include "shader.h"
 
+class Game;
 class Camera
 {
 public:
@@ -26,13 +27,16 @@ public:
 	// Stores the width and height of the window
 	int width;
 	int height;
+	int Mapx = 0, Mapy = 0;
+
+	bool EditMode = true;
 
 	// Adjust the speed of the camera and it's sensitivity when looking around
 	float speed = 1.f;
 	float sensitivity = 100.0f;
 
 	// Camera constructor to set up initial values
-	Camera(int width, int height, glm::vec3 position);
+	Camera(int width, int height, glm::vec3 position, bool ortho);
 
 	// Updates the camera matrix to the Vertex Shader
 	void updateMatrix(float FOVdeg, float nearPlane, float farPlane);
@@ -40,5 +44,9 @@ public:
 	void Matrix(Shader& shader, const char* uniform);
 	// Handles camera inputs
 	void Inputs(GLFWwindow* window, double deltatime);
+
+private:
+	bool perspective = false;
+	bool perspectiveCheck = false;
 };
 #endif

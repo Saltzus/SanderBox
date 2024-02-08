@@ -1,4 +1,6 @@
 #include "gui.h"
+int Gui::DrawType = 1;
+
 
 Gui::Gui(Game game)
 {
@@ -9,6 +11,8 @@ Gui::Gui(Game game)
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(game.window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
+
+
 
 }
 
@@ -25,8 +29,28 @@ void Gui::draw()
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    ImGui::Begin("Debug");
-    ImGui::Text("world pos ragdoll");
+    ImGui::Begin("Debug", 0, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove);
+    
+    if (ImGui::BeginTabBar("#tabs", ImGuiTabBarFlags_TabListPopupButton | ImGuiTabBarFlags_NoTooltip | ImGuiTabBarFlags_Reorderable))
+    {
+        if (ImGui::BeginTabItem("Delete"))
+        {
+            DrawType = 0;
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Grass")) 
+        {
+            DrawType = 1;
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Ground"))
+        {
+            DrawType = 2;
+            ImGui::EndTabItem();
+        }
+
+        ImGui::EndTabBar();
+    }
     ImGui::End();
 
 

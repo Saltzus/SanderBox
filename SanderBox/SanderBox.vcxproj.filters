@@ -119,6 +119,21 @@
     <ClInclude Include="GLFW\glfw3native.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="tracy\libbacktrace\backtrace.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="tracy\libbacktrace\config.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="tracy\libbacktrace\filenames.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="tracy\libbacktrace\internal.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\..\..\..\..\libraries\glfw-3.3.8.bin.WIN64\glfw-3.3.8.bin.WIN64\lib-vc2022\glfw3.lib">
@@ -132,20 +147,36 @@
     </Library>
   </ItemGroup>
   <ItemGroup>
-    <None Include="default.vert">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="default.frag">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="..\..\..\..\..\..\libraries\glfw-3.3.8.bin.WIN64\glfw-3.3.8.bin.WIN64\lib-vc2022\glfw3.dll">
       <Filter>Include</Filter>
     </None>
-    <None Include="default2.frag">
+    <None Include="resources\shaders\default.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="default2.vert">
+    <None Include="resources\shaders\default.vert">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="resources\shaders\default2.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="resources\shaders\default2.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="tracy\libbacktrace\LICENSE">
+      <Filter>Include</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\textures\icon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\textures\icon.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SanderBox.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
