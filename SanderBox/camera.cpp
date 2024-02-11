@@ -1,24 +1,24 @@
-#include"Camera.h"
+#include "Camera.h"
+#include "imgui/imgui.h"
 
 
-
-Camera::Camera(int width, int height, glm::vec3 position, bool ortho)
+Camera::Camera(int width, int height, glm::vec3 position)
 {
+	//Loads information
 	Camera::width = width;
 	Camera::height = height;
 	Position = -position;
-	perspective = ortho;
-	perspectiveCheck = perspective;
 }
 
-void Camera::updateMatrix(float FOVdeg, float nearPlane, float farPlane)
+void Camera::updateMatrix(float FOVdeg, float nearPlane, float farPlane, bool ortho)
 {
+
 	// Initializes matrices since otherwise they will be the null matrix
 	glm::mat4 view = glm::mat4(1.0f);
 	glm::mat4 projection = glm::mat4(1.0f);
 
 	// Adds perspective to the scene
-	if (perspective)
+	if (EditMode || ortho)
 	{
 		float aspect = ((float)width / height) * 20;
 		projection = glm::ortho(-aspect, aspect, -aspect, aspect, nearPlane - 10, farPlane * 100);
@@ -40,16 +40,20 @@ void Camera::updateMatrix(float FOVdeg, float nearPlane, float farPlane)
 
 bool TestClick = false;
 bool TestClick2 = false;
+
 glm::vec3 OldPos = { 9.2671f, 6.12119f, 32.9878f };
 glm::vec3 OldRot = { 0.00817754,0.0290847,-0.999543 };
 void Camera::Inputs(GLFWwindow* window, double deltatime)
 {
+	// Adds deltatime to movement
 	speed = speed * 100 * deltatime;
 
-	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
+	// Checks if Imgui want keyboard inputs and if m key is pressed
+	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS && !ImGui::GetIO().WantCaptureKeyboard)
 	{
 		if (TestClick == false)
 		{
+			// Saves 3d positions when going to edit mode and moving player for edit mode
 			if (EditMode == false)
 			{
 				OldPos = Position;
@@ -71,12 +75,12 @@ void Camera::Inputs(GLFWwindow* window, double deltatime)
 			TestClick = false;
 	}
 
+	// Edit mode ----------------------------------------
 	if (EditMode)
 	{
-		if (!perspectiveCheck)
-			perspective = true;
-		
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+		// Sets the position to teleport player to when in edit mode
 		Position = glm::vec3(25.6871f, -21.12119f, 32.9878f);
 		Orientation = glm::vec3(0,0.0,-0.00001);
 
@@ -90,13 +94,14 @@ void Camera::Inputs(GLFWwindow* window, double deltatime)
 
 			// Fetches the coordinates of the cursor
 			glfwGetCursorPos(window, &mouseX, &mouseY);
+			
 
-			std::cout << "Pos x = " << mouseX << "     Pos y = " << mouseY << "\n";
-
+			// Gets the coordinates for 2d input
 			for (size_t i = 0; i < 52; i++)
 			{
 				if (mouseX >= (8 + (i*12)) && mouseX <= (8 + ((1 + i) * 12)))
 				{
+					// sets what grid x axis mouse is inside
 					Mapx = i;
 				}
 			}
@@ -104,6 +109,7 @@ void Camera::Inputs(GLFWwindow* window, double deltatime)
 			{
 				if (mouseY >= (46 + (i * 9)) && mouseY <= (46 + ((1 + i) * 9)))
 				{
+					// same but for y axis
 					Mapy = i;
 				}
 			}
@@ -113,7 +119,6 @@ void Camera::Inputs(GLFWwindow* window, double deltatime)
 	}
 	else
 	{
-		perspective = perspectiveCheck;
 
 		// Handles key inputs
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)

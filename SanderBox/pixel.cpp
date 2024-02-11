@@ -1,12 +1,12 @@
 #include "pixel.h"
+#include "random"
+#include "gui.h"
 
 Pixel::Pixel(int posx, int posy)
 {
+    // Sets pixel start position
     Pixel::posx = posx;
     Pixel::posy = posy;
-    //----------------Types-----------------\\
-
-    const char* picture;
 
 
 
@@ -15,15 +15,15 @@ Pixel::Pixel(int posx, int posy)
     //----------------Model stuff-----------------\\
 
     float vertices[] = {
-     //  Positions                Colors                                  TexCoords
-         0.5f,  0.5f,  0.5f,    //color.x, color.y, color.z, color.w,   //0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,    //color.x, color.y, color.z, color.w,   //0.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,    //color.x, color.y, color.z, color.w,   //1.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,    //color.x, color.y, color.z, color.w,   //1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,    //color.x, color.y, color.z, color.w,   //0.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,    //color.x, color.y, color.z, color.w,   //1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,    //color.x, color.y, color.z, color.w,   //0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f     //color.x, color.y, color.z, color.w    //1.0f, 1.0f,
+     //  Positions          
+         0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f,  0.5f,  0.5f,
+         0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+         0.5f,  0.5f, -0.5f,
+         0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f 
     };
 
     unsigned int indices[] = {
@@ -50,6 +50,7 @@ Pixel::Pixel(int posx, int posy)
 
     glBindVertexArray(VAO);
 
+    // adds vertices and indices inside buffers
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
@@ -60,72 +61,183 @@ Pixel::Pixel(int posx, int posy)
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    // color attribute
-    //glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(3 * sizeof(float)));
-    //glEnableVertexAttribArray(1);
 
-    // texture coord attribute
-    //glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    //glEnableVertexAttribArray(2);
-
-
-    /*
-    //----------------Texture stuff-----------------\\
-    
-    // generate textures
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    // set the texture wrapping parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // set texture filtering parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    // load image, create texture and generate mipmaps
-    int width, height, nrChannels;
-    stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
- 
-    unsigned char* data = stbi_load(picture, &width, &height, &nrChannels, 0);
-    if (data)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else std::cout << "Failed to load texture" << std::endl;
- 
-    stbi_image_free(data);
-
-    */
-   
 }
 
 Pixel::~Pixel()
 {
+    // deletes buffers
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
 }
 
-void Pixel::draw(Shader shader, Camera camera, int type)
+
+void Pixel::draw(Shader shader, Camera camera, int type, std::vector<std::vector<unsigned int>>* Map, double deltatime)
 {
     shader.use();
 
+    // creates random seed for simulation
+    srand(rand());
+    int ruleset;
+
+    // Switch for all types and sets their color and simulation values
     switch (type)
     {
-    case 0: //picture = "resources/textures/PixelText.png";
+    case 0:
         return;
         break;
-    case 1: //picture = "resources/textures/Logo.png";
+    case 1: // Grass -------------------------------
         color = {0.0f, 1.f, 0.0f, 0.1f};
+        ruleset = 1;
         break;
-    case 2: //picture = "resources/textures/Logo.png";
+    case 2: // Ground ------------------------------
         color = { 0.51f, 0.337f, 0.251f, 1.0f};
+        ruleset = 2;
         break;
-    default: //picture = "resources/textures/PixelText.png";
+    case 3: // Sand --------------------------------
+        color = { 0.922f, 0.847f, 0.337f, 1.0f };
+        ruleset = 3;
+        break;
+    case 4: // Rock --------------------------------
+        color = { 0.702f, 0.659f, 0.659f, 1.0f };
+        ruleset = 0;
+        break;
+    case 5: // Water -------------------------------
+        color = { 0.612f, 0.678f, 0.98f, 1.0f };
+        ruleset = 4;
+        break;
+    default:
         break;
     }
 
+    // Gets if game has simulations on or off and if it does selects sim type depending on type of pixel
+    if (Gui::UseSim)
+    {
+        switch (ruleset)
+        {
+        case 0:
+            break;
+        case 1:// Only down ///////////////////////////////////////////////////////
+            if (delay < 10)
+                // Sets sim speed that you can change in settings
+                delay = delay + 1*Gui::SimSpeed;
 
+            if (posx <= 45 && delay >= 10)
+            {
+                if ((*Map)[posx + 1][posy] == 0 || (*Map)[posx + 1][posy] == 5)
+                {
+                    (*Map)[posx][posy] = (*Map)[posx + 1][posy];
+                    (*Map)[posx + 1][posy] = type;
+                }
+                delay = 0;
+            }
+            break;
+        case 2:// Only down but little bit faster /////////////////////////////////
+            if (delay < 7)
+                delay = delay + 1 * Gui::SimSpeed;
+            if (posx <= 45 && delay >= 7)
+            {
+                if ((*Map)[posx + 1][posy] == 0 || (*Map)[posx + 1][posy] == 5)
+                {
+                    (*Map)[posx][posy] = (*Map)[posx + 1][posy];
+                    (*Map)[posx + 1][posy] = type;
+                }
+                delay = 0;
+            }
+            break;
+        case 3:// Down and down right and down left ///////////////////////////////
+            if (delay < 7)
+                delay = delay + 1 * Gui::SimSpeed;
+            //checks if is inside bounds 
+            if (posx <= 45 && delay >= 7)
+            {
+                if ((*Map)[posx + 1][posy] == 0 || (*Map)[posx + 1][posy] == 5)
+                {
+                    (*Map)[posx][posy] = (*Map)[posx + 1][posy];
+                    (*Map)[posx + 1][posy] = type;
+                }
+                else
+                {
+                    if (posy <= 50 && !preferright)
+                    {
+                        // checks if next movement place is clear or has water
+                        if ((*Map)[posx + 1][posy + 1] == 0 || (*Map)[posx + 1][posy + 1] == 5)
+                        {
+                            // if type 0 or 5 switches their places so sand can sink under water
+                            (*Map)[posx][posy] = (*Map)[posx + 1][posy + 1];
+                            (*Map)[posx + 1][posy + 1] = type;
+                        }
+                        preferright = true;
+                    }
+                    else
+                    {
+                        if (posy >= 1) {
+                            if ((*Map)[posx + 1][posy - 1] == 0 || (*Map)[posx + 1][posy - 1] == 5)
+                            {
+                                (*Map)[posx][posy] = (*Map)[posx + 1][posy - 1];
+                                (*Map)[posx + 1][posy - 1] = type;
+                            }
+                        }
+                        preferright = false;
+                    }
+                }
+                delay = 0;
+            }
+
+        case 4:// Down and down right and down left and left and right////////////////////////////////
+            if (delay < 7)
+                delay = delay + 1 * Gui::SimSpeed;
+            if (posx <= 45 && delay >= 7)
+            {
+                if ((*Map)[posx + 1][posy] == 0)
+                {
+                    (*Map)[posx][posy] = 0;
+                    (*Map)[posx + 1][posy] = type;
+                }
+                else
+                {
+                    // randomly moves left or right
+                    int test = rand() & 50;
+                    if (posy <= 50 && !preferright)
+                    {
+                        if ((*Map)[posx + 1][posy + 1] == 0 )
+                        {
+                            (*Map)[posx][posy] = 0;
+                            (*Map)[posx + 1][posy + 1] = type;
+                        }
+                        else if ((*Map)[posx][posy + 1] == 0 && test <= 25)
+                        {
+                            (*Map)[posx][posy] = 0;
+                            (*Map)[posx][posy + 1] = type;
+                        }
+                        preferright = true;
+                    }
+                    else
+                    {
+                        if (posy >= 1) {
+                            if ((*Map)[posx + 1][posy - 1] == 0)
+                            {
+                                (*Map)[posx][posy] = 0;
+                                (*Map)[posx + 1][posy - 1] = type;
+                            }
+                            else if ((*Map)[posx][posy - 1] == 0 && test >= 25)
+                            {
+                                (*Map)[posx][posy] = 0;
+                                (*Map)[posx ][posy - 1] = type;
+                            }
+                        }
+                        preferright = false;
+                    }
+                }
+                delay = 0;
+            }
+
+        default:
+            break;
+        }
+    }
+
+    // makes cubes smaller if in edit mode
     if (camera.EditMode)
         scale = glm::vec3(0.7f, 0.7f, 0.7f);
     else
@@ -134,6 +246,7 @@ void Pixel::draw(Shader shader, Camera camera, int type)
     //If not makes pixel spin
     glm::mat4 model = glm::mat4(1.0f);
 
+    // Adds translarion for pixels
     model = glm::translate(model, translation);
 
     model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -142,7 +255,7 @@ void Pixel::draw(Shader shader, Camera camera, int type)
 
     model = glm::scale(model, scale);
 
-
+    // Sends data to shader uniforms
     unsigned int modelLoc = glGetUniformLocation(shader.ID, "model");
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &model[0][0]);
 
@@ -153,10 +266,10 @@ void Pixel::draw(Shader shader, Camera camera, int type)
     glUniform4f(colLoc, (float)color.r, (float)color.g, (float)color.b, (float)color.a);
 
 
-    //glBindTexture(GL_TEXTURE_2D, texture);
 
-
+    // Draws the pixel
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
     
 }
+

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <fstream>
 #include "glad/glad.h"
 #include "vector"
 #include "glm/glm.hpp"
@@ -22,11 +23,11 @@ public:
 	Game(const char* WindowTitle, int WindowWidth, int WindowHeight);
 	~Game();
 
+	// Map size (Will break mouse inputs if you change)
 	int Width = 47;
 	int Height = 52;
 
 	std::vector<std::vector<unsigned int>> Map;
-
 
 	GLFWwindow* window;
 
@@ -34,9 +35,12 @@ public:
 	void cleanup();
 
 	void initMap();
-	void renderMap(Shader shader, Camera camera);
+	void renderMap(Shader shader, Camera camera, double deltatime);
+
+	void loadMap();
+	void saveMap();
 
 private:
-	void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+
 };
 
